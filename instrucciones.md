@@ -1,0 +1,3 @@
+- Revisar package.json - meter script dev
+- En index.pug el HTML
+- En public/stylesheets/style.css el CSS

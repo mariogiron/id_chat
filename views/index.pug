@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  header
+    h1.animate__animated.animate__bounce 🚨 Chachi Chat 🙊
+    h2 Usuarios conectados <span id="numUsuarios"></span>
+  main 
+    ul#mensajes
+      each item in mensajes
+        li #{item.nombre}: #{item.mensaje}
+  footer 
+    div 
+      label Nombre 
+      input#inputNombre(type="text")
+    div 
+      label Mensaje
+      input#inputMensaje(type="text")
+    button#btnEnviar Enviar
+  
+  script.
+    const socket = io();
+
+    const inputNombre = document.getElementById('inputNombre');
+    const inputMensaje = document.getElementById('inputMensaje');
+    const boton = document.getElementById('btnEnviar');
+    const mensajes = document.getElementById('mensajes');
+    const numUsuarios = document.getElementById('numUsuarios');
+
+    // Envío de prueba
+    socket.emit('evento_prueba', { nombre: 'Mario' });
+
+    // Cuando pulsemos el botón hacer console.log de un objeto con claves nombre y mensaje y valores, los de los campos de texto
+    boton.addEventListener('click', () => {
+      const obj = {
+        nombre: inputNombre.value,
+        mensaje: inputMensaje.value
+      }
+      socket.emit('mensaje_chat', obj);
+    });
+
+    socket.on('mensaje_chat', (data)=>{
+      const li = document.createElement('li');
+      li.innerText = `${data.nombre}: ${data.mensaje}`;
+      mensajes.appendChild(li);
+    });
+
+    socket.on('usuarios_chat', (data)=>{
+      numUsuarios.innerText = data;
+    });
